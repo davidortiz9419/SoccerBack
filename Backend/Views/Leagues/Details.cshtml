@@ -23,12 +23,89 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Logo)
+            @if (!string.IsNullOrEmpty(Model.Logo))
+            {
+                <img src="@Url.Content(Model.Logo)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+            }
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.LeagueId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.LeagueId }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Create Team", "CreateTeam", new { id = Model.LeagueId }, new { @class = "btn btn-info" })
+    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-success" })
 </p>
+<h4>Teams</h4>
+@if (Model.Teams.Count == 0)
+{
+    <h5>No teams registered yet</h5>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover text-info">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Logo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Initials)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Teams.OrderBy(t => t.Name))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Logo))
+                    {
+                        <img src="@Url.Content(item.Logo)" alt="Image" style="width:100px;height:100px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Initials)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditTeam", new { id = item.TeamId }) |
+                    @Html.ActionLink("Details", "DetailsTeam", new { id = item.TeamId }) |
+                    <button type="button" class="dialog-window btn btn-link" data-id="@item.TeamId">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+<div class="modal fade" id="DeleteTeam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Delete Team</h2>
+            </div>
+            <div class="modal-body">
+                <div class="te">
+                    Are you sure to delete the record?
+                </div>
+                <div id="response">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("body").on("click", "button.dialog-window", null, function (e) {
+    var htmlContent = '<br /><a href="@Url.Action("DeleteTeam", "Leagues")/' + $(this).data('id') + '" class="btn btn-primary">Yes</a>&nbsp&nbsp&nbsp&nbsp<button type="button" id="btnNo" class="btn btn-success" data-dismiss="modal" aria-hidden="true">No</button>';
+    $("#response").html(htmlContent);
+    $('#DeleteTeam').modal('show');
+});
+    </script>
+}

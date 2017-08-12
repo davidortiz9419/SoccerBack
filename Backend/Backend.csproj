@@ -49,6 +49,9 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -112,9 +115,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -188,17 +188,30 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Classes\DBHelper.cs" />
+    <Compile Include="Classes\Response.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DatesController.cs" />
+    <Compile Include="Controllers\GenericController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LeaguesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TournamentGroupsController.cs" />
+    <Compile Include="Controllers\TournamentsController.cs" />
+    <Compile Include="Controllers\TournamentTeamsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Classes\FilesHelper.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DataContextLocal.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LeagueView.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\TeamView.cs" />
+    <Compile Include="Models\TournamentTeamView.cs" />
+    <Compile Include="Models\TournamentView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -215,6 +228,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\fileupload.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -225,6 +239,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\soccer.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -264,9 +279,42 @@
     <Content Include="Views\Leagues\Details.cshtml" />
     <Content Include="Views\Leagues\Edit.cshtml" />
     <Content Include="Views\Leagues\Index.cshtml" />
+    <Content Include="Views\Leagues\CreateTeam.cshtml" />
+    <Content Include="Views\Leagues\EditTeam.cshtml" />
+    <Content Include="Views\Tournaments\Create.cshtml" />
+    <Content Include="Views\Tournaments\Delete.cshtml" />
+    <Content Include="Views\Tournaments\Details.cshtml" />
+    <Content Include="Views\Tournaments\Edit.cshtml" />
+    <Content Include="Views\Tournaments\Index.cshtml" />
+    <Content Include="Views\TournamentGroups\Create.cshtml" />
+    <Content Include="Views\TournamentGroups\Delete.cshtml" />
+    <Content Include="Views\TournamentGroups\Details.cshtml" />
+    <Content Include="Views\TournamentGroups\Edit.cshtml" />
+    <Content Include="Views\TournamentGroups\Index.cshtml" />
+    <Content Include="Views\Tournaments\CreateGroup.cshtml" />
+    <Content Include="Views\Tournaments\EditGroup.cshtml" />
+    <Content Include="Views\Dates\Create.cshtml" />
+    <Content Include="Views\Dates\Delete.cshtml" />
+    <Content Include="Views\Dates\Details.cshtml" />
+    <Content Include="Views\Dates\Edit.cshtml" />
+    <Content Include="Views\Dates\Index.cshtml" />
+    <Content Include="Views\Tournaments\CreateDate.cshtml" />
+    <Content Include="Views\Tournaments\EditDate.cshtml" />
+    <Content Include="Views\TournamentTeams\Create.cshtml" />
+    <Content Include="Views\TournamentTeams\Delete.cshtml" />
+    <Content Include="Views\TournamentTeams\Details.cshtml" />
+    <Content Include="Views\TournamentTeams\Edit.cshtml" />
+    <Content Include="Views\TournamentTeams\Index.cshtml" />
+    <Content Include="Views\Tournaments\DetailsGroup.cshtml" />
+    <Content Include="Views\Tournaments\CreateTeam.cshtml" />
+    <Content Include="Views\Tournaments\EditTeam.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Leagues\" />
+    <Folder Include="Content\Teams\" />
+    <Folder Include="Content\Tournaments\" />
+    <Folder Include="Views\Generic\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

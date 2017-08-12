@@ -1,0 +1,165 @@
+﻿@model Domain.Tournament
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Tournament</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Logo)
+        </dt>
+
+        <dd>
+            @if (!string.IsNullOrEmpty(Model.Logo))
+            {
+                <img src="@Url.Content(Model.Logo)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Order)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit Tournament", "Edit", new { id = Model.TournamentId }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Create Group", "CreateGroup", new { id = Model.TournamentId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Create Date", "CreateDate", new { id = Model.TournamentId }, new { @class = "btn btn-info" })
+    @Html.ActionLink("Back to Tournament", "Index", new { }, new { @class = "btn btn-success" })
+</p>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Groups</h4>
+        @if (Model.Groups.Count == 0)
+        {
+            <h5>No groups registered yet</h5>
+        }
+        else
+        {
+            <table class="table table-striped table-bordered table-hover">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Groups.FirstOrDefault().Name)
+                    </th>
+                    <th>
+                        # Teams
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Groups.OrderBy(g => g.Name))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TournamentTeams.Count)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditGroup", new { id = item.TournamentGroupId }) |
+                            @Html.ActionLink("Details", "DetailsGroup", new { id = item.TournamentGroupId }) |
+                            <button type="button" class="dialog-window btn btn-link" data-id="@item.TournamentGroupId">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+    <div class="col-md-6">
+        <h4>Dates</h4>
+        @if (Model.Dates.Count == 0)
+        {
+            <h5>No dates registered yet</h5>
+        }
+        else
+        {
+            <table class="table table-striped table-bordered table-hover">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Dates.FirstOrDefault().Name)
+                    </th>
+                    <th>
+                        # Matches
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Dates.OrderBy(d => d.Name))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.Matches.Count)*@
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditDate", new { id = item.DateId }) |
+                            @Html.ActionLink("Details", "DetailsDate", new { id = item.DateId }) |
+                            @Html.ActionLink("Delete", "DeleteDate", new { id = item.DateId }, new { @onclick = "return confirm('You are sure to delete the record?');" })
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Delete Group</h2>
+            </div>
+            <div class="modal-body">
+                <div class="te">
+                    Are you sure to delete the record?
+                </div>
+                <div id="response">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+    $("body").on("click", "button.dialog-window", null, function (e) {
+        var htmlContent = '<br /><a href="@Url.Action("DeleteGroup", "Tournaments")/'
+            + $(this).data('id')
+            + '" class="btn btn-primary">Yes</a>&nbsp&nbsp&nbsp&nbsp<button type="button" id="btnNo" class="btn btn-success" data-dismiss="modal" aria-hidden="true">No</button>';
+    $("#response").html(htmlContent);
+    $('#DeleteGroup').modal('show');
+  });
+  </script>
+}

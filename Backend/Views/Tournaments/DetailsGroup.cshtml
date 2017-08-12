@@ -1,0 +1,132 @@
+﻿
+@model Domain.TournamentGroup
+
+@{
+    ViewBag.Title = "Table";
+}
+
+<h2>Tournament: @Model.Tournament.Name</h2>
+<h3>Group: @Model.Name</h3>
+
+<p>
+    @Html.ActionLink("Create New", "CreateTeam", new { id = Model.TournamentGroupId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to Group", "Details", new { id = Model.TournamentId }, new { @class = "btn btn-success" })
+</p>
+@if (Model.TournamentTeams.Count == 0)
+{
+    <h4>Not teams added yet</h4>
+}
+else
+{
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().Position)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().Team.Logo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().Team.Name)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().MatchesPlayed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().MatchesWon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().MatchesLost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().MatchesTied)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().FavorGoals)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().AgainstGoals)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TournamentTeams.FirstOrDefault().Points)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.TournamentTeams.OrderBy(t => t.Position))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Team.Logo))
+                    {
+                        <img src="@Url.Content(item.Team.Logo)" alt="Image" style="width:80px;height:80px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Team.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.MatchesPlayed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MatchesWon)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MatchesLost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MatchesTied)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FavorGoals)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AgainstGoals)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Points)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditTeam", new { id = item.TournamentTeamId }) |
+                    <button type="button" class="dialog-window btn btn-link" data-id="@item.TournamentTeamId">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<div class="modal fade" id="DeleteGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Delete Team</h2>
+            </div>
+            <div class="modal-body">
+                <div class="te">
+                    Are you sure to delete the record?
+                </div>
+                <div id="response">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("body").on("click", "button.dialog-window", null, function (e) {
+        var htmlContent = '<br /><a href="@Url.Action("DeleteTeam", "Tournaments")/'
+            + $(this).data('id')
+            + '" class="btn btn-primary">Yes</a>&nbsp&nbsp&nbsp&nbsp<button type="button" id="btnNo" class="btn btn-success" data-dismiss="modal" aria-hidden="true">No</button>';
+    $("#response").html(htmlContent);
+    $('#DeleteTeam').modal('show');
+  });
+    </script>
+}
