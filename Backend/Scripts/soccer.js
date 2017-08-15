@@ -1,10 +1,10 @@
 ﻿$(document).ready(function () {
     var dateFormated = moment($('#datepicker input').val(), 'DD/MM/YYYY').format('YYYY/MM/DD');
     $('#datepicker input').val(dateFormated);
-    $('#datepicker').datetimepicker({ format: 'YYYY/MM/DD' });
+    $('#datepicker').datetimepicker({ format: 'YYYY/MM/DD'});
     $('#timepicker').datetimepicker({ format: 'LT' });
 
-    $("#LeagueId").change(function () {
+$("#LeagueId").change(function () {
         $("#TeamId").empty();
         $.ajax({
             type: 'POST',

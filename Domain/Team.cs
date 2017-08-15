@@ -33,6 +33,15 @@ namespace Domain
         public virtual League League { get; set; }
 
         [JsonIgnore]
+        public virtual ICollection<Match> Locals { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Match> Visitors { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<TournamentTeam> TournamentTeams { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<User> Fans { get; set; }
     }
 }

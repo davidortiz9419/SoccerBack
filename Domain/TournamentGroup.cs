@@ -24,6 +24,9 @@ namespace Domain
         public virtual Tournament Tournament { get; set; }
 
         [JsonIgnore]
+        public virtual ICollection<Match> Matches { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<TournamentTeam> TournamentTeams { get; set; }
     }
 }

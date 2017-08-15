@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace Backend.Controllers
 {
-    [Authorize]
     public class LeaguesController : Controller
     {
         private DataContextLocal db = new DataContextLocal();
@@ -41,6 +40,7 @@ namespace Backend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Create(LeagueView view)
         {
             if (ModelState.IsValid)
@@ -110,6 +110,7 @@ namespace Backend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(LeagueView view)
         {
             if (ModelState.IsValid)
@@ -154,6 +155,7 @@ namespace Backend.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var league = await db.Leagues.FindAsync(id);
@@ -191,6 +193,7 @@ namespace Backend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreateTeam(TeamView view)
         {
             if (ModelState.IsValid)
@@ -264,6 +267,7 @@ namespace Backend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> EditTeam(TeamView view)
         {
             if (ModelState.IsValid)
@@ -292,6 +296,7 @@ namespace Backend.Controllers
             return View(view);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteTeam(int? id)
         {
             if (id == null)

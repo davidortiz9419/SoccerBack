@@ -1,0 +1,110 @@
+﻿@model Domain.Match
+
+@{
+    ViewBag.Title = "CloseMatch";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Close Match</h2>
+        <h3>Tournament: @Model.Date.Tournament.Name</h3>
+        <h4>Date: @Model.Date.Name</h4>
+    </div>
+    <div class="col-md-6">
+        <br />
+        <table>
+            <tr>
+                <td width="200px" align="center">
+                    @if (!string.IsNullOrEmpty(Model.Local.Logo))
+                    {
+                        <img src="@Url.Content(Model.Local.Logo)" alt="Image" style="width:120px;height:120px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td width="50px" align="center">
+                    <h2>Vs.</h2>
+                </td>
+                <td width="200px" align="center">
+                    @if (!string.IsNullOrEmpty(Model.Visitor.Logo))
+            {
+                        <img src="@Url.Content(Model.Visitor.Logo)" alt="Image" style="width:120px;height:120px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <h3>@Model.Local.Name</h3>
+                </td>
+                <td width="50px" align="center"></td>
+                <td align="center">
+                    <h3>@Model.Visitor.Name</h3>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.MatchId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LocalGoals, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LocalGoals, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LocalGoals, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.VisitorGoals, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.VisitorGoals, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.VisitorGoals, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @*<input type="submit" value="Close Match" class="btn btn-primary" onclick="return confirm('Are you sure to close the match?');" />*@
+                <button type="button" class="dialog-window btn btn-primary" data-id="@Model.DateId">Close</button>
+                @Html.ActionLink("Back to Date", "DetailsDate", new { id = Model.DateId }, new { @class = "btn btn-success" })
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="CloseMatch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Close Match</h2>
+            </div>
+            <div class="modal-body">
+                <div class="te">
+                    Are you sure to close the match?
+                </div>
+                <div id="response">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+    $("body").on("click", "button.dialog-window", null, function (e) {
+            var htmlContent = '<br /><a href="@Url.Action("CloseMatch", "Tournaments")/'
+            + $(this).data('id')
+            + '" class="btn btn-primary">Yes</a>&nbsp&nbsp&nbsp&nbsp<button type="button" id="btnNo" class="btn btn-success" data-dismiss="modal" aria-hidden="true">No</button>';
+            $("#response").html(htmlContent);
+            $('#CloseMatch').modal('show');
+    });
+</script>
+}

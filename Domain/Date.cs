@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,5 +22,8 @@ namespace Domain
 
         [JsonIgnore]
         public virtual Tournament Tournament { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Match> Matches { get; set; }
     }
 }

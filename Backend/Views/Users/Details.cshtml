@@ -1,0 +1,219 @@
+﻿@model Backend.Models.UserView
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h4>User</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FavoriteTeam.Name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FavoriteTeam.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.UserType.Name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.UserType.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FirstName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LastName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.NickName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.NickName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Points)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Points)
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+    <div class="col-md-6">
+        @if (!string.IsNullOrEmpty(Model.Picture))
+        {
+            <img src="@Url.Content(Model.Picture)" alt="Image" style="width:200px;height:100px;max-width: 100%; height: auto;" />
+        }
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("New Group", "CreateGroup", new { id = Model.UserId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-success" })
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Users Groups</h4>
+        @if (Model.UserGroups.Count == 0)
+        {
+            <h5>No groups added yet</h5>
+        }
+        else
+        {
+            <table class="table table-hover table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserGroups.FirstOrDefault().Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserGroups.FirstOrDefault().Logo)
+                    </th>
+                    <th>
+                        # Members
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.UserGroups.OrderBy(ug => ug.Name))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Logo))
+                            {
+                                <img src="@Url.Content(item.Logo)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GroupUsers.Count)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditGroup", new { id = item.GroupId }, new { @class = "btn btn-warning" })
+                            @Html.ActionLink("Details", "DetailsGroup", new { id = item.GroupId }, new { @class = "btn btn-info" })
+                            <button type="button" class="dialog-window btn btn-link" data-id="@item.GroupId">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+
+    <div class="modal fade" id="DeleteGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Delete Group</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="te">
+                        Are you sure to delete the record?
+                    </div>
+                    <div id="response">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <h4>Groups User Belong</h4>
+        @if (Model.Groups.Count == 0)
+        {
+            <h5>No groups belong added yet</h5>
+        }
+        else
+        {
+            <table class="table table-hover table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Groups.FirstOrDefault().Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Groups.FirstOrDefault().Logo)
+                    </th>
+                    <th>
+                        Owner
+                    </th>
+                    <th>
+                        # Members
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Groups.OrderBy(g => g.Name))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Logo))
+                            {
+                                <img src="@Url.Content(item.Logo)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Owner.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GroupUsers.Count)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Delete", "DeleteUserGroup", new { id = item.GroupId }, new { @onclick = "return confirm('Areyou sure to delete this record?');" })
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("body").on("click", "button.dialog-window", null, function (e) {
+        var htmlContent = '<br /><a href="@Url.Action("DeleteGroup", "Users")/'
+            + $(this).data('id')
+            + '" class="btn btn-primary">Yes</a>&nbsp&nbsp&nbsp&nbsp<button type="button" id="btnNo" class="btn btn-success" data-dismiss="modal" aria-hidden="true">No</button>';
+    $("#response").html(htmlContent);
+    $('#DeleteGroup').modal('show');
+  });
+    </script>
+}

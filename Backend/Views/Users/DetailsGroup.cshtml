@@ -1,0 +1,113 @@
+﻿@model Domain.Group
+
+@{
+    ViewBag.Title = "User Groups";
+}
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>User: @Model.Owner.FullName</h2>
+        <h3>Group: @Model.Name</h3>
+    </div>
+    <div class="col-md-6">
+        <br />
+        @if (!string.IsNullOrEmpty(Model.Logo))
+        {
+            <img src="@Url.Content(Model.Logo)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+        }
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Add User", "AddUser", new { id = Model.GroupId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to User", "Details", new { id = Model.Owner.UserId }, new { @class = "btn btn-success" })
+</p>
+
+@if (Model.GroupUsers.Count == 0)
+{
+    <h4>No users added yet</h4>
+}
+else
+{
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().User.Picture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().User.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().IsAccepted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().IsBlocked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().Points)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.GroupUsers.OrderByDescending(gu => gu.Points))
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.User.Picture))
+                    {
+                        <img src="@item.User.PictureFullPath" alt="Image" style="width:80px;height:80px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAccepted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsBlocked)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Points)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditUser", new { id = item.GroupUserId }) |
+                    @Html.ActionLink("Delete", "DeleteUser", new { id = item.GroupUserId })
+                    <button type="button" class="dialog-window btn btn-link" data-id="@item.GroupUserId">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<div class="modal fade" id="DeleteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Delete User</h2>
+            </div>
+            <div class="modal-body">
+                <div class="te">
+                    Are you sure to delete the record?
+                </div>
+                <div id="response">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("body").on("click", "button.dialog-window", null, function (e) {
+        var htmlContent = '<br /><a href="@Url.Action("DeleteUser", "Users")/'
+            + $(this).data('id')
+            + '" class="btn btn-primary">Yes</a>&nbsp&nbsp&nbsp&nbsp<button type="button" id="btnNo" class="btn btn-success" data-dismiss="modal" aria-hidden="true">No</button>';
+    $("#response").html(htmlContent);
+    $('#DeleteUser').modal('show');
+  });
+    </script>
+}
